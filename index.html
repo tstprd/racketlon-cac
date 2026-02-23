@@ -326,25 +326,24 @@
         const nextLabel = {tabletennis: 'Ping-pong', badminton: 'Badminton', squash: 'Squash', tennis: 'Tennis'}[nextSport];
 
         if (sportsRemaining === 1) {
-          // Tennis reste
-          if (delta > 0) {
-            const bNeed = delta + 1;
-            const aMax = 21 - bNeed;
-            if (aMax >= 0) {
-              html += `<div class="analysis-item scenario">🏆 ${playerB} gagne si ${nextLabel} ≥ 21-${aMax}</div>`;
-              html += `<div class="analysis-item scenario">🏆 ${playerA} gagne si ${nextLabel} ≤ 21-${aMax + 2} ou gagne le set</div>`;
-              html += `<div class="analysis-item gummiarm_scenario">⚡ Gummiarm si ${nextLabel} = 21-${21 - delta}</div>`;
-            }
-          } else if (delta < 0) {
-            const aNeed = Math.abs(delta) + 1;
-            const bMax = 21 - aNeed;
-            if (bMax >= 0) {
-              html += `<div class="analysis-item scenario">🏆 ${playerA} gagne si ${nextLabel} ≥ 21-${bMax}</div>`;
-              html += `<div class="analysis-item scenario">🏆 ${playerB} gagne si ${nextLabel} ≤ 21-${bMax + 2} ou gagne le set</div>`;
-              html += `<div class="analysis-item gummiarm_scenario">⚡ Gummiarm si ${nextLabel} = 21-${21 - Math.abs(delta)}</div>`;
-            }
+          // Tennis reste - affichage en points à marquer
+          const absDelta = Math.abs(delta);
+          const leader = delta > 0 ? playerA : playerB;
+          const trailer = delta > 0 ? playerB : playerA;
+          
+          if (delta !== 0) {
+            // Le meneur (leader) doit limiter la casse
+            // Le poursuivant (trailer) doit gagner avec assez d'écart
+            const trailerNeedToWin = absDelta + 1; // écart minimum pour gagner
+            const leaderMaxToLose = 21 - trailerNeedToWin; // max que leader peut marquer si trailer fait 21
+            const gummiarmScore = 21 - absDelta;
+            
+            html += `<div class="analysis-item scenario">🏆 ${trailer} doit marquer 21 pts et ${leader} doit marquer ${leaderMaxToLose} ou moins</div>`;
+            html += `<div class="analysis-item scenario">🏆 ${leader} gagne si marque ${leaderMaxToLose + 2}+ pts, ou gagne le set</div>`;
+            html += `<div class="analysis-item gummiarm_scenario">⚡ Gummiarm si ${trailer} fait 21 et ${leader} fait ${gummiarmScore}</div>`;
           } else {
             html += `<div class="analysis-item scenario">🏆 Le gagnant du ${nextLabel} remporte le match !</div>`;
+            html += `<div class="analysis-item gummiarm_scenario">⚡ Gummiarm si égalité au ${nextLabel}</div>`;
           }
         } else if (sportsRemaining === 2) {
           // Squash + Tennis restent
