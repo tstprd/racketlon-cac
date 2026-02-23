@@ -335,9 +335,10 @@
             // Écart insurmontable même avec 21-0
             html += `<div class="analysis-item winner">🏆 ${leader} a déjà gagné ! Même 21-0 ne suffit pas.</div>`;
           } else if (absDelta === 21) {
-            // Seul un 21-0 permet le Gummiarm
-            html += `<div class="analysis-item scenario">🏆 ${leader} gagne sauf si ${trailer} fait 21-0</div>`;
-            html += `<div class="analysis-item gummiarm_scenario">⚡ Gummiarm uniquement si ${trailer} gagne 21-0</div>`;
+            // Seul un 21-0 permet le Gummiarm, B ne peut pas gagner
+            html += `<div class="analysis-item scenario">🏆 ${trailer} ne peut plus gagner au tennis</div>`;
+            html += `<div class="analysis-item gummiarm_scenario">⚡ Gummiarm si ${trailer} fait 21-0</div>`;
+            html += `<div class="analysis-item scenario">🏆 ${leader} gagne dans tous les autres cas</div>`;
           } else if (delta !== 0) {
             // Cas normal
             const trailerNeedToWin = absDelta + 1;
