@@ -53,8 +53,19 @@ function initScoreInputs() {
   const scoreInputs = document.querySelectorAll('.score-input');
   scoreInputs.forEach(input => {
     input.addEventListener('input', () => {
+      // Cap at 21
+      if (input.value !== '' && parseInt(input.value) > 21) {
+        input.value = 21;
+      }
       updateTotals();
       updateAnalysis();
+    });
+    
+    // Also validate on blur
+    input.addEventListener('blur', () => {
+      if (input.value !== '' && parseInt(input.value) > 21) {
+        input.value = 21;
+      }
     });
     
     // Select all on focus for easy editing
