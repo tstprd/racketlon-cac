@@ -308,6 +308,23 @@
     </footer>
   </div>
 
+  <script>
+    // Define set21 immediately to ensure it's available
+    function set21(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.value = 21;
+        if (typeof update === 'function') update();
+      }
+    }
+    
+    function clearAll() {
+      document.getElementById('playerA').value = '';
+      document.getElementById('playerB').value = '';
+      document.querySelectorAll('.score-input').forEach(i => i.value = '');
+      if (typeof update === 'function') update();
+    }
+  </script>
   <script src="scoring.js"></script>
   <script>
     const SPORTS = [
@@ -316,18 +333,6 @@
       { id: 'sq', name: 'Squash', row: 'row-sq' },
       { id: 'ten', name: 'Tennis', row: 'row-ten' }
     ];
-    
-    function set21(id) {
-      document.getElementById(id).value = 21;
-      update();
-    }
-    
-    function clearAll() {
-      document.getElementById('playerA').value = '';
-      document.getElementById('playerB').value = '';
-      document.querySelectorAll('.score-input').forEach(i => i.value = '');
-      update();
-    }
     
     function getScoreRaw(prefix) {
       const aEl = document.getElementById(prefix + '-a');
