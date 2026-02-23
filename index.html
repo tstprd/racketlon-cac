@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#1a1a2e">
   <title>Racketlon Calc</title>
+  <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -16,7 +17,8 @@
     }
     .container { max-width: 500px; margin: 0 auto; }
     header { text-align: center; margin-bottom: 20px; }
-    header h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    header h1 { font-size: 1.5rem; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    header h1 iconify-icon { font-size: 1.6rem; }
     header p { color: #888; font-size: 0.9rem; }
     .players-row { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
     .player-input { flex: 1; }
@@ -31,7 +33,8 @@
     .sport-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #0f3460; }
     .sport-row:last-child { border-bottom: none; }
     .sport-row.has-error .sport-name { color: #ff4757; }
-    .sport-name { flex: 1; font-size: 0.95rem; }
+    .sport-name { flex: 1; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+    .sport-name iconify-icon { font-size: 1.4rem; color: #e94560; }
     .score-group { display: flex; align-items: center; gap: 6px; }
     .score-input {
       width: 50px; padding: 8px 4px; border: 2px solid #0f3460; border-radius: 8px;
@@ -87,7 +90,7 @@
 <body>
   <div class="container">
     <header>
-      <h1>🏓🏸🎾 Racketlon Calc</h1>
+      <h1><iconify-icon icon="mdi:table-tennis"></iconify-icon><iconify-icon icon="mdi:badminton"></iconify-icon><iconify-icon icon="mdi:tennis"></iconify-icon> Racketlon Calc</h1>
       <p>Calculateur de scores v1.2</p>
     </header>
     <main>
@@ -104,7 +107,7 @@
       </div>
       <div class="scores-grid">
         <div class="sport-row" id="row-tt">
-          <span class="sport-name">🏓 Ping-pong</span>
+          <span class="sport-name"><iconify-icon icon="mdi:table-tennis"></iconify-icon> Ping-pong</span>
           <div class="score-group">
             <button class="btn-x" onclick="clearCell('tt-a')">✕</button>
             <input type="number" class="score-input" id="tt-a" min="0" max="21" inputmode="numeric">
@@ -118,7 +121,7 @@
           </div>
         </div>
         <div class="sport-row" id="row-bad">
-          <span class="sport-name">🏸 Badminton</span>
+          <span class="sport-name"><iconify-icon icon="mdi:badminton"></iconify-icon> Badminton</span>
           <div class="score-group">
             <button class="btn-x" onclick="clearCell('bad-a')">✕</button>
             <input type="number" class="score-input" id="bad-a" min="0" max="21" inputmode="numeric">
@@ -132,7 +135,7 @@
           </div>
         </div>
         <div class="sport-row" id="row-sq">
-          <span class="sport-name">🎯 Squash</span>
+          <span class="sport-name"><iconify-icon icon="mdi:racquetball"></iconify-icon> Squash</span>
           <div class="score-group">
             <button class="btn-x" onclick="clearCell('sq-a')">✕</button>
             <input type="number" class="score-input" id="sq-a" min="0" max="21" inputmode="numeric">
@@ -146,7 +149,7 @@
           </div>
         </div>
         <div class="sport-row" id="row-ten">
-          <span class="sport-name">🎾 Tennis</span>
+          <span class="sport-name"><iconify-icon icon="mdi:tennis"></iconify-icon> Tennis</span>
           <div class="score-group">
             <button class="btn-x" onclick="clearCell('ten-a')">✕</button>
             <input type="number" class="score-input" id="ten-a" min="0" max="21" inputmode="numeric">
