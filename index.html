@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="description" content="Calculateur de scores Racketlon - Analysez vos matchs en temps réel">
+  <title>Racketlon Calc</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏓</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏓🏸🎾 Racketlon Calc</h1>
+      <p class="subtitle">Analyseur de match en temps réel</p>
+    </header>
+
+    <main>
+      <!-- Tab navigation -->
+      <nav class="tabs">
+        <button class="tab active" data-tab="manual">✏️ Saisie manuelle</button>
+        <button class="tab" data-tab="photo">📷 Photo OCR</button>
+      </nav>
+
+      <!-- Manual entry tab -->
+      <section id="manual-tab" class="tab-content active">
+        <div class="players-row">
+          <div class="player-input">
+            <label for="playerA">Joueur A</label>
+            <input type="text" id="playerA" placeholder="Nom" value="">
+          </div>
+          <div class="vs">VS</div>
+          <div class="player-input">
+            <label for="playerB">Joueur B</label>
+            <input type="text" id="playerB" placeholder="Nom" value="">
+          </div>
+        </div>
+
+        <div class="scores-grid">
+          <div class="score-row header">
+            <span class="sport-label"></span>
+            <span class="score-header" id="headerA">A</span>
+            <span class="score-sep"></span>
+            <span class="score-header" id="headerB">B</span>
+          </div>
+          
+          <div class="score-row" data-sport="tabletennis">
+            <span class="sport-label">🏓 Ping-pong</span>
+            <input type="number" class="score-input scoreA" min="0" max="30" placeholder="0">
+            <span class="score-sep">-</span>
+            <input type="number" class="score-input scoreB" min="0" max="30" placeholder="0">
+          </div>
+          
+          <div class="score-row" data-sport="badminton">
+            <span class="sport-label">🏸 Badminton</span>
+            <input type="number" class="score-input scoreA" min="0" max="30" placeholder="0">
+            <span class="score-sep">-</span>
+            <input type="number" class="score-input scoreB" min="0" max="30" placeholder="0">
+          </div>
+          
+          <div class="score-row" data-sport="squash">
+            <span class="sport-label">🎯 Squash</span>
+            <input type="number" class="score-input scoreA" min="0" max="30" placeholder="0">
+            <span class="score-sep">-</span>
+            <input type="number" class="score-input scoreB" min="0" max="30" placeholder="0">
+          </div>
+          
+          <div class="score-row" data-sport="tennis">
+            <span class="sport-label">🎾 Tennis</span>
+            <input type="number" class="score-input scoreA" min="0" max="30" placeholder="0">
+            <span class="score-sep">-</span>
+            <input type="number" class="score-input scoreB" min="0" max="30" placeholder="0">
+          </div>
+          
+          <div class="score-row total">
+            <span class="sport-label">📊 TOTAL</span>
+            <span class="total-score" id="totalA">0</span>
+            <span class="score-sep">-</span>
+            <span class="total-score" id="totalB">0</span>
+          </div>
+        </div>
+
+        <div class="delta-display">
+          <span id="deltaText">Égalité</span>
+        </div>
+      </section>
+
+      <!-- Photo OCR tab -->
+      <section id="photo-tab" class="tab-content">
+        <div class="photo-section">
+          <label class="photo-button" for="photoInput">
+            📷 Prendre une photo ou choisir une image
+          </label>
+          <input type="file" id="photoInput" accept="image/*" capture="environment">
+          
+          <div id="photoPreview" class="photo-preview hidden">
+            <img id="previewImage" src="" alt="Aperçu">
+            <button id="processPhoto" class="btn-primary">🔍 Analyser avec OCR</button>
+          </div>
+          
+          <div id="ocrStatus" class="ocr-status hidden">
+            <div class="spinner"></div>
+            <span>Chargement de Tesseract.js...</span>
+          </div>
+          
+          <div id="ocrResult" class="ocr-result hidden">
+            <h3>Texte détecté :</h3>
+            <pre id="ocrText"></pre>
+            <button id="applyOcr" class="btn-secondary">Appliquer les scores</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analysis results -->
+      <section id="analysis" class="analysis-section">
+        <h2>📈 Analyse</h2>
+        <div id="analysisContent">
+          <p class="placeholder">Entrez les scores pour voir l'analyse</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Racketlon Calc v1.0 • <a href="https://www.racketlon.net" target="_blank">Règles officielles</a></p>
+    </footer>
+  </div>
+
+  <script src="scoring.js"></script>
+  <script src="ocr.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

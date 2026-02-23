@@ -1,0 +1,453 @@
+/* Racketlon Calc - Mobile-first CSS */
+
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-card: #0f3460;
+  --accent: #e94560;
+  --accent-light: #ff6b6b;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --success: #00d26a;
+  --warning: #ffc107;
+  --border-radius: 12px;
+  --spacing: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--spacing);
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: var(--spacing) 0;
+  margin-bottom: var(--spacing);
+}
+
+header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: var(--spacing);
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  background: var(--accent);
+  color: var(--text-primary);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Players row */
+.players-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+  margin-bottom: var(--spacing);
+}
+
+.player-input {
+  flex: 1;
+}
+
+.player-input label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.player-input input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--bg-card);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.player-input input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.vs {
+  font-weight: bold;
+  color: var(--accent);
+  padding-top: 20px;
+}
+
+/* Scores grid */
+.scores-grid {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing);
+  margin-bottom: var(--spacing);
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: 1fr 60px 20px 60px;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bg-card);
+}
+
+.score-row:last-child {
+  border-bottom: none;
+}
+
+.score-row.header {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding-bottom: 8px;
+}
+
+.score-row.total {
+  border-top: 2px solid var(--accent);
+  margin-top: 8px;
+  padding-top: 16px;
+  font-weight: bold;
+}
+
+.sport-label {
+  font-size: 0.95rem;
+}
+
+.score-header {
+  text-align: center;
+  font-weight: bold;
+}
+
+.score-input {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid var(--bg-card);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.score-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.score-sep {
+  text-align: center;
+  color: var(--text-secondary);
+  font-weight: bold;
+}
+
+.total-score {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--accent-light);
+}
+
+/* Delta display */
+.delta-display {
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  text-align: center;
+  margin-bottom: var(--spacing);
+}
+
+#deltaText {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.delta-positive {
+  color: var(--success);
+}
+
+.delta-negative {
+  color: var(--accent);
+}
+
+.delta-zero {
+  color: var(--warning);
+}
+
+/* Photo section */
+.photo-section {
+  text-align: center;
+}
+
+.photo-button {
+  display: block;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border: 2px dashed var(--bg-card);
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.photo-button:hover {
+  border-color: var(--accent);
+  background: var(--bg-card);
+}
+
+#photoInput {
+  display: none;
+}
+
+.photo-preview {
+  margin-top: var(--spacing);
+}
+
+.photo-preview img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Buttons */
+.btn-primary {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--accent-light);
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 12px 20px;
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: var(--spacing);
+}
+
+/* OCR status */
+.ocr-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  margin-top: var(--spacing);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--bg-card);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.ocr-result {
+  margin-top: var(--spacing);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing);
+}
+
+.ocr-result h3 {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.ocr-result pre {
+  background: var(--bg-primary);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Analysis section */
+.analysis-section {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing);
+  margin-bottom: var(--spacing);
+}
+
+.analysis-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--bg-card);
+}
+
+.placeholder {
+  color: var(--text-secondary);
+  text-align: center;
+  font-style: italic;
+}
+
+.analysis-item {
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent);
+}
+
+.analysis-item.winner {
+  border-left-color: var(--success);
+  background: rgba(0, 210, 106, 0.1);
+}
+
+.analysis-item.gummiarm {
+  border-left-color: var(--warning);
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.analysis-item.leader {
+  border-left-color: var(--accent-light);
+}
+
+.analysis-item.skip_tennis {
+  border-left-color: var(--success);
+}
+
+.analysis-item.tennis_setup {
+  border-left-color: #00bcd4;
+}
+
+.analysis-item.header {
+  font-weight: bold;
+  border-left-color: var(--text-secondary);
+  background: var(--bg-secondary);
+}
+
+.analysis-item.scenario {
+  font-size: 0.95rem;
+}
+
+.analysis-item.gummiarm_scenario {
+  border-left-color: var(--warning);
+  font-style: italic;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: var(--spacing) 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+footer a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 400px) {
+  .score-row {
+    grid-template-columns: 1fr 50px 16px 50px;
+  }
+  
+  .sport-label {
+    font-size: 0.85rem;
+  }
+  
+  .score-input {
+    padding: 6px;
+    font-size: 1rem;
+  }
+}
+
+/* PWA standalone mode */
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+  }
+}
