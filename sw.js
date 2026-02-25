@@ -3,7 +3,7 @@
  * Enables offline functionality
  */
 
-const CACHE_NAME = "racketlon-calc-v1";
+const CACHE_NAME = "racketlon-calc-v3";
 const ASSETS = [
   "/",
   "/index.html",
@@ -34,7 +34,7 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Fetch - serve from cache, fallback to network
+// Fetch - network first, fallback to cache
 self.addEventListener("fetch", (event) => {
   // Skip non-GET and cross-origin requests
   if (event.request.method !== "GET" || !event.request.url.startsWith(self.location.origin)) {
@@ -42,25 +42,20 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      // Return cached version or fetch from network
-      const fetchPromise = fetch(event.request)
-        .then((response) => {
-          // Cache successful responses
-          if (response.ok) {
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseClone);
-            });
-          }
-          return response;
-        })
-        .catch(() => {
-          // Network failed, return cached if available
-          return cached;
-        });
-
-      return cached || fetchPromise;
-    }),
+    fetch(event.request)
+      .then((response) => {
+        // Cache successful responses
+        if (response.ok) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        // Network failed, return cached if available
+        return caches.match(event.request);
+      })
   );
 });
