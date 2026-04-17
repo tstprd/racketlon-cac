@@ -207,6 +207,61 @@
       .delta-row.hidden {
         display: none;
       }
+      .status-row {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #0f3460;
+        font-size: 0.9rem;
+        text-align: center;
+      }
+      .status-row.hidden {
+        display: none;
+      }
+      .status-row.finished {
+        border: 1px solid #00d26a;
+        color: #7dffbe;
+      }
+      .status-row.progress {
+        border: 1px solid #ffc107;
+        color: #ffd966;
+      }
+      .dashboard {
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(15, 52, 96, 0.6);
+      }
+      .dashboard h3 {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        color: #ffb3bf;
+      }
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .dash-card {
+        border: 1px solid #2c5c92;
+        border-radius: 8px;
+        padding: 8px 10px;
+        background: rgba(26, 26, 46, 0.55);
+      }
+      .dash-card strong {
+        color: #ffccd5;
+      }
+      .dash-card p {
+        margin-top: 2px;
+        color: #d6d6d6;
+        font-size: 0.85rem;
+      }
+      .dash-list {
+        margin: 0;
+        padding-left: 18px;
+        color: #d6d6d6;
+        font-size: 0.82rem;
+      }
       .delta-positive {
         color: #00d26a;
       }
@@ -419,6 +474,27 @@
           <div class="delta-row" id="deltaRow">
             <span id="deltaText"></span>
           </div>
+          <div id="matchStatus" class="status-row hidden"></div>
+          <div class="dashboard" id="scoreDashboard">
+            <h3>🌌 Dashboard des univers de score</h3>
+            <div class="dashboard-grid">
+              <div class="dash-card">
+                <strong>Univers actuel</strong>
+                <p id="dashUniverseNow">—</p>
+              </div>
+              <div class="dash-card">
+                <strong>Plancher / plafond final</strong>
+                <p id="dashUniverseRange">—</p>
+              </div>
+              <div class="dash-card">
+                <strong>2 visualisations recommandées</strong>
+                <ul class="dash-list">
+                  <li><strong>Jauge d'avance</strong> (0 centré + seuil de victoire dynamique).</li>
+                  <li><strong>Matrice issue finale</strong> (heatmap score restant → vainqueur).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
         <div id="errorsBox" class="errors-box hidden">
           <h3>⚠️ Scores invalides</h3>
@@ -477,12 +553,16 @@
 
           if (hasBoth) {
             lastFilledIndex = index;
+            const isTennis = sport.key === "tennis";
+            const isEarlyFinishedTennis =
+              isTennis && isMathematicallyFinishedAtCurrentTennisScore(aNum, bNum);
+
             if (aNum === 21 && bNum === 21) {
               errors.push({ sport: sport.name, msg: "Les deux ne peuvent pas avoir 21" });
               aEl.classList.add("error");
               bEl.classList.add("error");
               document.getElementById(sport.row).classList.add("has-error");
-            } else if (aNum !== 21 && bNum !== 21) {
+            } else if (aNum !== 21 && bNum !== 21 && !isEarlyFinishedTennis) {
               errors.push({ sport: sport.name, msg: "Un joueur doit avoir 21" });
               aEl.classList.add("error");
               bEl.classList.add("error");
@@ -510,6 +590,74 @@
         return errors;
       }
 
+      function isValidFinishedSet(aNum, bNum) {
+        return (aNum === 21 || bNum === 21) && !(aNum === 21 && bNum === 21);
+      }
+
+      function getPreviousTotalsBeforeTennis() {
+        let preA = 0;
+        let preB = 0;
+        for (const sport of SPORTS_CONFIG.filter((s) => s.key !== "tennis")) {
+          const { a, b } = getScoreRaw(sport.id);
+          if (a === "" || b === "") continue;
+
+          const aNum = parseInt(a);
+          const bNum = parseInt(b);
+          if (!isValidFinishedSet(aNum, bNum)) {
+            return null;
+          }
+          preA += aNum;
+          preB += bNum;
+        }
+        return { preA, preB };
+      }
+
+      function isMathematicallyFinishedAtCurrentTennisScore(tenA, tenB) {
+        const totals = getPreviousTotalsBeforeTennis();
+        if (!totals) return false;
+
+        const currentDelta = totals.preA + tenA - (totals.preB + tenB);
+        const worstDeltaIfBComesBack = currentDelta - (21 - tenB);
+        const worstDeltaIfAComesBack = currentDelta + (21 - tenA);
+
+        return worstDeltaIfBComesBack > 0 || worstDeltaIfAComesBack < 0;
+      }
+
+      function buildUniverse(totalA, totalB) {
+        const playerA = document.getElementById("playerA").value || "Joueur A";
+        const playerB = document.getElementById("playerB").value || "Joueur B";
+        const tennisA = parseInt(document.getElementById("ten-a").value || "0", 10);
+        const tennisB = parseInt(document.getElementById("ten-b").value || "0", 10);
+        const hasTennisScores =
+          document.getElementById("ten-a").value !== "" && document.getElementById("ten-b").value !== "";
+
+        const nowEl = document.getElementById("dashUniverseNow");
+        const rangeEl = document.getElementById("dashUniverseRange");
+
+        if (totalA === 0 && totalB === 0) {
+          nowEl.textContent = "Saisis les scores pour voir les univers possibles.";
+          rangeEl.textContent = "Le plancher/plafond apparaîtra automatiquement.";
+          return;
+        }
+
+        const delta = totalA - totalB;
+        if (delta > 0) {
+          nowEl.textContent = `${playerA} est dans l'univers favorable (+${delta}).`;
+        } else if (delta < 0) {
+          nowEl.textContent = `${playerB} est dans l'univers favorable (+${Math.abs(delta)}).`;
+        } else {
+          nowEl.textContent = "Univers neutre : parfaite égalité.";
+        }
+
+        if (hasTennisScores && tennisA < 21 && tennisB < 21) {
+          const floorDelta = delta - (21 - tennisB); // pire cas pour A (B finit 21)
+          const ceilDelta = delta + (21 - tennisA); // meilleur cas pour A (A finit 21)
+          rangeEl.textContent = `Delta final possible: de ${floorDelta} à ${ceilDelta} (selon la fin du tennis).`;
+        } else {
+          rangeEl.textContent = "Pas de tennis partiel actif : plage finale non nécessaire.";
+        }
+      }
+
       function update() {
         const errors = validateScores();
         const errorsBox = document.getElementById("errorsBox");
@@ -532,11 +680,19 @@
           const { a, b } = getScoreRaw(sport.id);
           const aNum = parseInt(a),
             bNum = parseInt(b);
+
+          const isEarlyFinishedTennis =
+            sport.key === "tennis" &&
+            a !== "" &&
+            b !== "" &&
+            aNum !== 21 &&
+            bNum !== 21 &&
+            isMathematicallyFinishedAtCurrentTennisScore(aNum, bNum);
+
           if (
             a !== "" &&
             b !== "" &&
-            (aNum === 21 || bNum === 21) &&
-            !(aNum === 21 && bNum === 21)
+            (isValidFinishedSet(aNum, bNum) || isEarlyFinishedTennis)
           ) {
             scores[sport.key] = `${a}-${b}`;
             totalA += aNum;
@@ -568,6 +724,52 @@
             deltaEl.className = "delta-zero";
           }
         }
+
+        const statusEl = document.getElementById("matchStatus");
+        const tennisA = parseInt(document.getElementById("ten-a").value);
+        const tennisB = parseInt(document.getElementById("ten-b").value);
+        const hasTennisScores =
+          document.getElementById("ten-a").value !== "" && document.getElementById("ten-b").value !== "";
+
+        const allSportsCompleted = SPORTS_CONFIG.every((sport) => {
+          const { a, b } = getScoreRaw(sport.id);
+          if (a === "" || b === "") return false;
+          const aNum = parseInt(a, 10);
+          const bNum = parseInt(b, 10);
+          const earlyTennis =
+            sport.key === "tennis" &&
+            aNum !== 21 &&
+            bNum !== 21 &&
+            isMathematicallyFinishedAtCurrentTennisScore(aNum, bNum);
+          return isValidFinishedSet(aNum, bNum) || earlyTennis;
+        });
+
+        if (
+          hasTennisScores &&
+          tennisA !== 21 &&
+          tennisB !== 21 &&
+          isMathematicallyFinishedAtCurrentTennisScore(tennisA, tennisB) &&
+          errors.length === 0
+        ) {
+          const winner = delta > 0 ? playerA : playerB;
+          statusEl.className = "status-row finished";
+          statusEl.textContent = `🏆 Match terminé (fin anticipée au tennis) : ${winner} est vainqueur.`;
+        } else if (allSportsCompleted && errors.length === 0 && delta !== 0) {
+          const winner = delta > 0 ? playerA : playerB;
+          statusEl.className = "status-row finished";
+          statusEl.textContent = `🏆 Match terminé : ${winner} est vainqueur.`;
+        } else if (allSportsCompleted && errors.length === 0 && delta === 0) {
+          statusEl.className = "status-row progress";
+          statusEl.textContent = "⚡ Égalité finale : Gummiarm nécessaire.";
+        } else if (errors.length === 0 && Object.keys(scores).length > 0) {
+          statusEl.className = "status-row progress";
+          statusEl.textContent = "⏳ Match en cours.";
+        } else {
+          statusEl.className = "status-row hidden";
+          statusEl.textContent = "";
+        }
+
+        buildUniverse(totalA, totalB);
 
       }
 
